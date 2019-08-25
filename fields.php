@@ -10,6 +10,8 @@ return [
         // Gather all commits and format as valid JSOn
         $log = $gitHelper->getRepo()->log('{%n \"hash\": \"%h\",%n \"date\": \"%at\",%n \"message\": \"%s\",%n \"author\": \"%an\"},');
         $log = rtrim($log,",");
+        // jh4mit: Revert commit auto messages add double-quotes that screw with json_decode; this eliminates them
+        $log = preg_replace("/Revert \"(Merge branch .+)\"\"/", "Revert \\\"$1\\\"\"", $log);
         $log = "[{$log}]";
         $log = json_decode($log, true);
 
